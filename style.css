@@ -144,7 +144,7 @@ main {
   font-size: 1.15rem;
   line-height: 1;
   padding: 2px 4px;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.15s, transform 0.15s;
   z-index: 1;
 }
