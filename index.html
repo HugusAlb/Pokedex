@@ -17,6 +17,7 @@
     <div class="tabs">
       <button class="tab-btn active" data-tab="pokemons">Pokémons</button>
       <button class="tab-btn" data-tab="recent">Últimos vistos</button>
+      <button class="tab-btn" data-tab="favorites">Favoritos</button>
     </div>
   </header>
 
@@ -28,6 +29,10 @@
     <div id="tab-recent" class="tab-panel hidden">
       <div id="recent-grid" class="pokemon-grid"></div>
       <p id="recent-empty" class="empty-msg">Nenhum Pokémon visto ou buscado ainda.</p>
+    </div>
+    <div id="tab-favorites" class="tab-panel hidden">
+      <div id="favorites-grid" class="pokemon-grid"></div>
+      <p id="favorites-empty" class="empty-msg">Nenhum Pokémon favoritado ainda.<br/>Clique na estrela de qualquer card para favoritar.</p>
     </div>
   </main>
 

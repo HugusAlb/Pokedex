@@ -4,6 +4,8 @@ const PAGE_SIZE = 24;
 const grid = document.getElementById('pokemon-grid');
 const recentGrid = document.getElementById('recent-grid');
 const recentEmpty = document.getElementById('recent-empty');
+const favoritesGrid = document.getElementById('favorites-grid');
+const favoritesEmpty = document.getElementById('favorites-empty');
 const loadMoreBtn = document.getElementById('load-more');
 const searchInput = document.getElementById('search');
 const clearSearchBtn = document.getElementById('clear-search');
@@ -13,8 +15,9 @@ const closeModalBtn = document.getElementById('close-modal');
 const modalBody = document.getElementById('modal-body');
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabPanels = {
-  pokemons: document.getElementById('tab-pokemons'),
-  recent: document.getElementById('tab-recent'),
+  pokemons:  document.getElementById('tab-pokemons'),
+  recent:    document.getElementById('tab-recent'),
+  favorites: document.getElementById('tab-favorites'),
 };
 
 let offset = 0;
@@ -23,6 +26,7 @@ let searchTimeout = null;
 let allPokemonNames = [];
 let recentlySeen = [];
 let activeTab = 'pokemons';
+let favorites = JSON.parse(localStorage.getItem('pokedex_favorites') || '[]');
 
 // ── Tabs ──────────────────────────────────────────────────────
 tabBtns.forEach(btn => {
@@ -39,11 +43,51 @@ tabBtns.forEach(btn => {
     if (tab === 'recent') {
       searchWrapper.classList.add('hidden');
       renderRecentTab();
+    } else if (tab === 'favorites') {
+      searchWrapper.classList.add('hidden');
+      renderFavoritesTab();
     } else {
       searchWrapper.classList.remove('hidden');
     }
   });
 });
+
+// ── Favorites ─────────────────────────────────────────────────
+function isFavorite(id) {
+  return favorites.some(p => p.id === id);
+}
+
+function saveFavorites() {
+  localStorage.setItem('pokedex_favorites', JSON.stringify(favorites));
+}
+
+function toggleFavorite(pokemon, e) {
+  e.stopPropagation();
+  if (isFavorite(pokemon.id)) {
+    favorites = favorites.filter(p => p.id !== pokemon.id);
+  } else {
+    favorites = [pokemon, ...favorites];
+  }
+  saveFavorites();
+  syncStarButtons(pokemon.id);
+  if (activeTab === 'favorites') renderFavoritesTab();
+}
+
+function syncStarButtons(pokemonId) {
+  const isFav = isFavorite(pokemonId);
+  document.querySelectorAll(`.pokemon-card[data-id="${pokemonId}"] .star-btn`)
+    .forEach(btn => btn.classList.toggle('active', isFav));
+}
+
+function renderFavoritesTab() {
+  favoritesGrid.innerHTML = '';
+  if (!favorites.length) {
+    favoritesEmpty.classList.remove('hidden');
+    return;
+  }
+  favoritesEmpty.classList.add('hidden');
+  favorites.forEach(p => favoritesGrid.appendChild(buildCard(p)));
+}
 
 // ── Recently seen ─────────────────────────────────────────────
 function addToRecent(pokemon) {
@@ -103,6 +147,7 @@ function buildCard(pokemon) {
     pokemon.sprites.front_default;
 
   card.innerHTML = `
+    <button class="star-btn ${isFavorite(pokemon.id) ? 'active' : ''}" title="Favoritar"></button>
     <p class="pokemon-id">#${String(pokemon.id).padStart(4, '0')}</p>
     <img src="${sprite}" alt="${pokemon.name}" loading="lazy" />
     <p class="pokemon-name">${pokemon.name}</p>
@@ -111,6 +156,7 @@ function buildCard(pokemon) {
     </div>
   `;
 
+  card.querySelector('.star-btn').addEventListener('click', e => toggleFavorite(pokemon, e));
   card.addEventListener('click', () => openModal(pokemon));
   return card;
 }
