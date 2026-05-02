@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokédex</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Pokédex</h1>
+    <div class="search-wrapper" id="search-wrapper">
+      <input type="text" id="search" placeholder="Buscar por nome ou número..." />
+      <button id="clear-search" class="clear-btn hidden">&times;</button>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="pokemons">Pokémons</button>
+      <button class="tab-btn" data-tab="recent">Últimos vistos</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="tab-pokemons" class="tab-panel">
+      <div id="pokemon-grid" class="pokemon-grid"></div>
+      <button id="load-more">Carregar mais</button>
+    </div>
+    <div id="tab-recent" class="tab-panel hidden">
+      <div id="recent-grid" class="pokemon-grid"></div>
+      <p id="recent-empty" class="empty-msg">Nenhum Pokémon visto ou buscado ainda.</p>
+    </div>
+  </main>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close-btn" id="close-modal">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
